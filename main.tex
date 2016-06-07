@@ -24,8 +24,10 @@
 \begin{frame}
   \frametitle{研究课题}
 
+  \begin{block}{IPv4}
   在IPv4/IPv6过渡场景中，基于翻译等过渡技术，\\设计和实现灵活通用的流量调度机制，\\
   使得ISP可以自由定制多出口情景下的调度策略
+  \end{block}
 \end{frame}
 
 \section{研究背景}
@@ -64,7 +66,6 @@
       \item IPv6诞生20周年：扩展迅速，全球覆盖率未过半\footnotemark[1]
       \end{itemize}
     \item 在很长的一段时间内，IPv4和IPv6网络共存
-    \item 不同IP协议的用户访问不同IP协议的网络资源
     \end{itemize}
   \end{block}
   \begin{block}{过渡技术}
@@ -77,69 +78,135 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{双栈、封装和翻译}
+
+  \vspace{-1em}
+  \begin{columns}[T] % align columns
+    \begin{column}{.29\textwidth}
+      \begin{block}{双栈}
+        \begin{itemize}
+        \item 不互通的两个协议栈
+        \item IPv4地址短缺
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{.70\textwidth}
+    \end{column}
+  \end{columns}
+  \begin{columns}[T]
+    \begin{column}{.29\textwidth}
+      \begin{block}{封装}
+        \begin{itemize}
+        \item 一种IP协议数据包封装另一种
+        \item 协议不互通
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{.70\textwidth}
+    \end{column}
+  \end{columns}
+  \begin{columns}[T]
+    \begin{column}{.29\textwidth}
+      \begin{block}{翻译}
+        \begin{itemize}
+        \item 对IP包头进行翻译协议
+        \item 协议间互通
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \hfill
+    \begin{column}{.70\textwidth}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
   \frametitle{课题研究的过渡场景}
 
-  \vspace{1em}
-
-  \begin{block}{}
+  \begin{block}{使用IPv6主干网承载IPv4端到端通信}
     \begin{itemize}
-    \item 所有流量必须先通过IVI无状态翻译
-    \item DS-Lite隧道仅作为无法翻译时的后备方法
-    \item 出口闲置
+    \item 用户端和资源端均存在大量不支持IPv6协议的应用
+    \item ISP的IPv6网络越来越成熟
+    \item 翻译技术：DIVI、NAT64
+    \item 封装技术：DS-Lite
     \end{itemize}
   \end{block}
 \end{frame}
 
-\subsection{流量调度}
+\subsection{多出口流量调度}
 \begin{frame}
-  \frametitle{原因}
+  \frametitle{多出口流量调度}
 
-  \vspace{1em}
-
-  \begin{block}{}
+  \begin{block}{多出口的作用}
     \begin{itemize}
-    \item 所有流量必须先通过IVI无状态翻译
-    \item DS-Lite隧道仅作为无法翻译时的后备方法
-    \item 出口闲置
+    \item 优化带宽利用率、成本，主备切换……
+    \item 搭建不同过渡系统，优势互补
+    \item 按照一定的策略引导用户流量进入不同的上游网络
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{调度机制}
+    \begin{itemize}
+    \item 传统IPv4网络：BGP、策略路由
+    \item 过渡场景：用户的IPv4流量先在用户接入口汇聚
+    \item 将流量导向不同的过渡系统，从而选择上游出口
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\subsection{课题工作内容}
+\begin{frame}
+  \frametitle{工作内容}
+
+  \begin{block}{工作}
+    \begin{itemize}
+    \item 调度机制设计和实现：用户接入口
+    \item 修改现有过渡技术，适配多出口场景
+    \item 测试和验证
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{意义}
+    \begin{itemize}
+    \item 使得过渡场景下的流量调度应用设计和开发成为可能
+    \item ISP通过制定调度策略，优化用户体验和管理成本
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{相关过渡技术}
+\subsection{基于翻译的过渡技术}
+\begin{frame}
+  \frametitle{IPv4/IPv6翻译}
+
+  \begin{block}{地址翻译}
+    \begin{itemize}
+    \item 基于前缀的静态算法
+    \item 拼接和提取：处理效率高，地址透明
+    \item 地址聚类：简化路由，提高效率
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{数据包翻译}
+    \begin{itemize}
+    \item 尽量保留原始意义
+    \item 静态转换，提取和转换简单
+    \item 网络设备和端系统对来源网络的IP协议无感知
     \end{itemize}
   \end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{目标}
+  \frametitle{双重翻译}
 
-  \vspace{1em}
-
-  \begin{block}{}
+  \begin{block}{DIVI无状态双重翻译}
     \begin{itemize}
-    \item 所有流量必须先通过IVI无状态翻译
-    \item DS-Lite隧道仅作为无法翻译时的后备方法
-    \item 出口闲置
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\subsection{内容和意义}
-\begin{frame}
-  \frametitle{目标模型}
-
-  \begin{block}{}
-    \begin{itemize}
-    \item 按照流信息、链路状态等参数向不同出口分发流量
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\section{翻译器设计}
-\begin{frame}
-  \frametitle{翻译器设计}
-
-  \begin{block}{模块}
-    \begin{itemize}
-    \item 控制器：观察、决策
-    \item OVS交换机：分发，非传统路由，可编程性强
-    \item 翻译/隧道出口选择 $\rightarrow$ 流表项
-    \item netns封装：隔绝调度和出口路由
+    \item 核心翻译器无状态，二级翻译器部分状态
+    \item 为二级翻译器划分上游IPv4地址段
+    \item 地址复用：无状态的地址转换
+    \item 网络可扩性好
     \end{itemize}
   \end{block}
 \end{frame}
