@@ -135,6 +135,11 @@
   \end{block}
 \end{frame}
 
+\begin{frame}
+  \frametitle{DIVI、NAT64、DS-Lite}
+
+\end{frame}
+
 \subsection{多出口流量调度}
 \begin{frame}
   \frametitle{多出口流量调度}
@@ -162,7 +167,11 @@
 
   \begin{block}{工作}
     \begin{itemize}
-    \item 调度机制设计和实现：用户接入口
+    \item 调度机制设计和实现
+      \begin{itemize}
+      \item 灵活：基于五元组
+      \item 通用：与具体过渡技术解耦
+      \end{itemize}
     \item 修改现有过渡技术，适配多出口场景
     \item 测试和验证
     \end{itemize}
@@ -176,37 +185,100 @@
   \end{block}
 \end{frame}
 
-\section{相关过渡技术}
-\subsection{基于翻译的过渡技术}
+\section{设计和实现}
 \begin{frame}
-  \frametitle{IPv4/IPv6翻译}
+  \frametitle{总体结构}
 
-  \begin{block}{地址翻译}
+  \begin{block}{设计的核心：用户接入口}
     \begin{itemize}
-    \item 基于前缀的静态算法
-    \item 拼接和提取：处理效率高，地址透明
-    \item 地址聚类：简化路由，提高效率
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{数据包翻译}
-    \begin{itemize}
-    \item 尽量保留原始意义
-    \item 静态转换，提取和转换简单
-    \item 网络设备和端系统对来源网络的IP协议无感知
+    \item 上游出口分配给各一级处理模块
+    \item 用户网接入点设置各个二级处理模块
+    \item 接入点按照五元组等信息分发流量到二级处理模块
+    \item 二级处理模块交给各自的一级处理模块
     \end{itemize}
   \end{block}
 \end{frame}
 
 \begin{frame}
-  \frametitle{双重翻译}
+  \frametitle{设计原则}
 
-  \begin{block}{DIVI无状态双重翻译}
+  \begin{block}{正确性}
     \begin{itemize}
-    \item 核心翻译器无状态，二级翻译器部分状态
-    \item 为二级翻译器划分上游IPv4地址段
-    \item 地址复用：无状态的地址转换
-    \item 网络可扩性好
+    \item 二级处理模块和调度机制的共存
+    \item 用户IPv6接入与调度机制的IPv6接入共存
+    \item 规则设计完备且尽量小巧
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{高效性}
+    \begin{itemize}
+    \item 用户流量在千兆或者万兆级别，间接代价被流量放大
+    \item 牺牲代码和配置的可读性，换取性能
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{通用性}
+    \begin{itemize}
+    \item 不涉及任何二级处理模块的内部功能
+    \item 对二级处理模块实现方式没有任何假设
+    \item 不同二级处理模块平级对待
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{用户网接入点结构设计}
+  \begin{block}{用户IPv4接入网口}
+    \begin{itemize}
+    \item DHCP服务：分发用户IPv4地址
+    \item DNS服务：域名解析
+      \begin{itemize}
+      \item 不涉及地址翻译，多级查询依赖过渡技术
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{用户IPv6接入网口}
+    \begin{itemize}
+    \item 不受限制：RA、DHCPv6、DNS
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{用户网接入点结构设计}
+  \begin{block}{判断模块}
+    \begin{itemize}
+    \item 根据五元组信息，判断数据包发往某个二级处理模块
+    \item 通过标记数据包实现（见后）
+      \begin{itemize}
+      \item 识别二级处理模块退回的数据包
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{分发模块}
+    \begin{itemize}
+    \item 根据决策，将数据包发往不同的二级处理模块
+      \begin{itemize}
+      \item 如果调度策略和传统路由类似，可以和判断模块合并（见后） 
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{用户网接入点结构设计}
+  \begin{block}{各二级处理模块}
+    \begin{itemize}
+    \item 需要为调度机制提供可控的数据包传入口
+    \item 二级模块间路由等规则的冲突解决
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{IPv6主干网接入网口}
+    \begin{itemize}
+    \item 设备接口有限，所有二级模块共享一个主干网接入网口
     \end{itemize}
   \end{block}
 \end{frame}
@@ -223,6 +295,16 @@
     \item 控制器：静态策略、轮询切换
     \end{itemize}
   \end{block}
+\end{frame}
+
+\section{流量调度机制设计}
+
+\begin{frame}
+  \frametitle{实验平台}
+
+  \begin{center}
+    \includegraphics[width=\textwidth]{figs/test-env.jpeg}
+  \end{center}
 \end{frame}
 
 \begin{frame}
