@@ -84,7 +84,7 @@
 
   \vspace{-1em}
   \begin{columns}[T] % align columns
-    \begin{column}{.29\textwidth}
+    \begin{column}{.4\textwidth}
       \begin{block}{双栈}
         \begin{itemize}
         \item 不互通的两个协议栈
@@ -93,11 +93,16 @@
       \end{block}
     \end{column}
     \hfill
-    \begin{column}{.70\textwidth}
+    \begin{column}{.49\textwidth}
+      \vspace{-2em}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/16-dual-stack.pdf}
+      \end{figure}
+      \vspace{-2em}
     \end{column}
   \end{columns}
   \begin{columns}[T]
-    \begin{column}{.29\textwidth}
+    \begin{column}{.4\textwidth}
       \begin{block}{封装}
         \begin{itemize}
         \item 一种IP协议数据包封装另一种
@@ -106,26 +111,39 @@
       \end{block}
     \end{column}
     \hfill
-    \begin{column}{.70\textwidth}
+    \begin{column}{.49\textwidth}
+      \vspace{-2em}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{figs/17-encapsulation.pdf}
+      \end{figure}
     \end{column}
   \end{columns}
+  \vspace{1em}
   \begin{columns}[T]
-    \begin{column}{.29\textwidth}
+    \begin{column}{.4\textwidth}
       \begin{block}{翻译}
         \begin{itemize}
-        \item 对IP包头进行翻译协议
+        \item 对IP包头进行协议翻译
         \item 协议间互通
         \end{itemize}
       \end{block}
     \end{column}
     \hfill
-    \begin{column}{.70\textwidth}
+    \begin{column}{.49\textwidth}
+      \vspace{-2em}
+      \begin{figure}
+        \includegraphics[width=0.8\textwidth]{figs/18-xlat.pdf}
+      \end{figure}
     \end{column}
   \end{columns}
 \end{frame}
 
 \begin{frame}
   \frametitle{课题研究的过渡场景}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figs/1-464.pdf}
+  \end{figure}
 
   \begin{block}{使用IPv6主干网承载IPv4端到端通信}
     \begin{itemize}
@@ -140,6 +158,18 @@
 \begin{frame}
   \frametitle{DIVI、NAT64、DS-Lite}
 
+  \vspace{-1.5em}
+  \begin{figure}
+    \includegraphics[width=0.9\textwidth]{figs/5-divi.pdf}\\
+    \vspace{-3.5em}
+    \includegraphics[width=0.9\textwidth]{figs/7-nat64.pdf}\\
+    \vspace{-4em}
+    \caption{\tiny DIVI无状态翻译和NAT64有状态翻译}
+    \vspace{-2em}
+    \includegraphics[width=0.9\textwidth]{figs/8-ds-lite.pdf}
+    \vspace{-4em}
+    \caption{\tiny DS-Lite封装}
+  \end{figure}
 \end{frame}
 
 \subsection{多出口流量调度}
@@ -192,6 +222,11 @@
 \begin{frame}
   \frametitle{总体结构}
 
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/9-multi-egress.pdf}
+  \end{figure}
+  \vspace{-1em}
+
   \begin{block}{设计的核心：用户接入口}
     \begin{itemize}
     \item 上游出口分配给各一级处理模块
@@ -232,6 +267,11 @@
 
 \begin{frame}
   \frametitle{用户网接入点结构设计}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-a.pdf}
+  \end{figure}
+  \vspace{-1em}
+
   \begin{block}{用户IPv4接入网口}
     \begin{itemize}
     \item DHCP服务：分发用户IPv4地址
@@ -251,6 +291,11 @@
 
 \begin{frame}
   \frametitle{用户网接入点结构设计}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-b.pdf}
+  \end{figure}
+  \vspace{-1em}
+
   \begin{block}{判断模块}
     \begin{itemize}
     \item 根据五元组信息，判断数据包发往某个二级处理模块
@@ -273,6 +318,11 @@
 
 \begin{frame}
   \frametitle{用户网接入点结构设计}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-b.pdf}
+  \end{figure}
+  \vspace{-1em}
+
   \begin{block}{各二级处理模块}
     \begin{itemize}
     \item 需要为调度机制提供可控的数据包传入口
@@ -318,6 +368,11 @@
 
 \begin{frame}
   \frametitle{用户网接入系统实现}
+  \vspace{-1em}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-b.pdf}
+  \end{figure}
+  \vspace{-2em}
 
   \begin{block}{判断模块}
     \begin{itemize}
@@ -340,6 +395,11 @@
 
 \begin{frame}
   \frametitle{用户网接入系统实现}
+  \vspace{-1em}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-d.pdf}
+  \end{figure}
+  \vspace{-2em}
 
   \begin{block}{各二级处理模块}
     \begin{itemize}
@@ -376,6 +436,11 @@
 
 \begin{frame}
   \frametitle{测试平台}
+  \vspace{-1em}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/12-test-arch.pdf}
+  \end{figure}
+  \vspace{-2em}
 
   \begin{table}
     \begin{tabular}{l | l}
@@ -391,6 +456,11 @@
 
 \begin{frame}
   \frametitle{基于源和目标地址的流量调度}
+  \vspace{-1em}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/12-test-arch.pdf}
+  \end{figure}
+  \vspace{-2em}
 
   \begin{block}{策略}
     \begin{itemize}
@@ -404,17 +474,17 @@
   \frametitle{节选测试结果}
 
   \begin{figure}
-    \includegraphics[width=0.8\textwidth]{figs/c1-s4-ping.jpeg}\\
-    \includegraphics[width=0.8\textwidth]{figs/c1-s4-pdump.jpeg}
-    \caption{基于源地址的调度}
+    \includegraphics[width=0.7\textwidth]{figs/c1-s4-ping.jpeg}\\
+    \includegraphics[width=0.7\textwidth]{figs/c1-s4-pdump.jpeg}
+    \caption{\tiny 基于源地址的调度}
   \end{figure}
 
   \vspace{-1em}
 
   \begin{figure}
-    \includegraphics[width=0.8\textwidth]{figs/c2-s1-ping.jpeg}\\
-    \includegraphics[width=0.8\textwidth]{figs/c2-s1-pdump.jpeg}
-    \caption{基于目的地址的调度}
+    \includegraphics[width=0.7\textwidth]{figs/c2-s1-ping.jpeg}\\
+    \includegraphics[width=0.7\textwidth]{figs/c2-s1-pdump.jpeg}
+    \caption{\tiny 基于目的地址的调度}
   \end{figure}
 \end{frame}
 
