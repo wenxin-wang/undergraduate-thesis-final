@@ -7,7 +7,7 @@ auto/
 *.log
 *.nav
 *.out
-*.pdf
+/*.pdf
 *.snm
 *.gz
 *.toc

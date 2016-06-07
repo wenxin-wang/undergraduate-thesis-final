@@ -13,6 +13,8 @@
 \author{王文鑫}
 \date{2016年6月8日}
 
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
 \begin{document}
 
 \begin{frame}
@@ -186,6 +188,7 @@
 \end{frame}
 
 \section{设计和实现}
+\subsection{总体结构}
 \begin{frame}
   \frametitle{总体结构}
 
@@ -199,6 +202,7 @@
   \end{block}
 \end{frame}
 
+\subsection{设计}
 \begin{frame}
   \frametitle{设计原则}
 
@@ -283,21 +287,136 @@
   \end{block}
 \end{frame}
 
-\section{完成工作}
+\subsection{实现}
 \begin{frame}
-  \frametitle{完成工作}
-
-  \begin{block}{}
+  \frametitle{背景技术}
+  \begin{block}{Linux}
     \begin{itemize}
-    \item 使用libvirt和netns搭建环境，测试拓扑设计和代码
-    \item OVS：设计流表
-    \item 翻译器：netfilter $\rightarrow$ iptables，可以被netns隔离
-    \item 控制器：静态策略、轮询切换
+    \item 路由、防火墙、编程接口
+    \item DIVI、NAT64、DS-Lite均有Linux实现
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{NetFilter和IPTables}
+    \begin{itemize}
+    \item NetFilter：数据包在Linux网络协议栈的标准处理流程
+    \item IPTabels：对NetFilter功能的划分和封装，支持网络虚拟化
+      \begin{itemize}
+      \item 匹配规则：五元组，处理规则：MARK、CONNMARK（路由标记）
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{IPRoute}
+    \begin{itemize}
+    \item 一个默认路由表，和多个用户创建的路由表
+    \item 按路由标记的路由表查找规则
+    \item 表内是传统的路由表项（目的地址前缀匹配）
     \end{itemize}
   \end{block}
 \end{frame}
 
-\section{流量调度机制设计}
+\begin{frame}
+  \frametitle{用户网接入系统实现}
+
+  \begin{block}{判断模块}
+    \begin{itemize}
+    \item 一组IPTables规则和可能的IPRoute路由规则
+    \item IPTables规则：非传统路由的五元组匹配
+    \item 路由规则：传统路由的调度规则，提升性能
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{分发模块}
+    \begin{itemize}
+    \item 按路由标记进行流量分发
+    \item 使用各二级模块提供的数据传入接口
+      \begin{itemize}
+      \item IPTables处理规则，隧道端点
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{用户网接入系统实现}
+
+  \begin{block}{各二级处理模块}
+    \begin{itemize}
+    \item 提供服从调度需求的数据接口
+      \begin{itemize}
+      \item 扩展DIVI二级处理器
+      \item 添加NAT64无状态二级处理器
+      \end{itemize}
+    \item 上游回复处理
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{用户IPv4/IPv6接入网口}
+    \begin{itemize}
+    \item 使用开源软件配置
+    \item 选择某个二级模块为IPv4 DNS提供向上级DNS服务的连接
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{二级处理模块间冲突解决}
+
+  \begin{block}{无法避免的冲突}
+    \begin{itemize}
+    \item 将有冲突的模块隔离在Linux命名空间
+    \item 各空间仿佛是独立的计算机，使用虚拟以太网线链接
+    \item 在全局空间外，使用路由规则调度即可
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\section{测试和验证}
+
+\begin{frame}
+  \frametitle{测试平台}
+
+  \begin{table}
+    \begin{tabular}{l | l}
+      一级处理器 & 上游IPv4地址（段）\\
+      \hline
+      IVI核心翻译器 & 58.200.129.128/27\\
+      NAT64一级翻译器 & 198.18.202.1\\
+      DS-Lite AFTR1 & 198.18.200.1\\
+      DS-Lite AFTR2 & 198.18.201.1\\
+    \end{tabular}
+  \end{table}
+\end{frame}
+
+\begin{frame}
+  \frametitle{基于源和目标地址的流量调度}
+
+  \begin{block}{策略}
+    \begin{itemize}
+    \item 用户1所有流量均通过上游出口1（DIVI）（基于源地址的调度）
+    \item 用户2与服务器1/2/3/4的通信分别通过上游出口1/2/3/4（基于目标地址的调度）
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{节选测试结果}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figs/c1-s4-ping.jpeg}\\
+    \includegraphics[width=0.8\textwidth]{figs/c1-s4-pdump.jpeg}
+    \caption{基于源地址的调度}
+  \end{figure}
+
+  \vspace{-1em}
+
+  \begin{figure}
+    \includegraphics[width=0.8\textwidth]{figs/c2-s1-ping.jpeg}\\
+    \includegraphics[width=0.8\textwidth]{figs/c2-s1-pdump.jpeg}
+    \caption{基于目的地址的调度}
+  \end{figure}
+\end{frame}
 
 \begin{frame}
   \frametitle{实验平台}
@@ -307,47 +426,24 @@
   \end{center}
 \end{frame}
 
+\section{总结}
 \begin{frame}
-  \frametitle{实验平台}
+  \frametitle{总结和计划}
 
-  \begin{center}
-    \includegraphics[width=\textwidth]{figs/test-env.jpeg}
-  \end{center}
-\end{frame}
-
-\begin{frame}
-  \frametitle{控制器}
-
-  \begin{center}
-    \includegraphics[width=\textwidth]{figs/static.jpeg}
-  \end{center}
-
-  \begin{center}
-    \includegraphics[width=\textwidth]{figs/round-robin.jpeg}  
-  \end{center}
-  
-\end{frame}
-
-\section{后续工作}
-\begin{frame}
-  \frametitle{后续工作}
-
-  \begin{block}{}
+  \begin{block}{总结}
     \begin{itemize}
-    \item 在多个二级翻译器间控制调度
-    \item 添加NAT64隧道
+    \item 设计调度机制，使得过渡场景下的流量调度成为可能
+      \begin{itemize}
+      \item 与具体过渡技术解耦的（通用），基于五元组（灵活）
+      \end{itemize}
+    \item 扩展过渡技术，符合多出口场景的需求
     \end{itemize}
   \end{block}
-\end{frame}
 
-\section{进度安排}
-
-\begin{frame}
-  \frametitle{进度安排}
-  \begin{block}{}
+  \begin{block}{后续工作}
     \begin{itemize}
-    \item 4月15日-5月15日：实现多个翻译器间的调度
-    \item 5月16日-答辩：封装接口，完善论文
+    \item 在实际场景中测试，获取性能指标
+    \item 利用调度机制研发流量调度应用解决实际需求
     \end{itemize}
   \end{block}
 \end{frame}
@@ -361,10 +457,7 @@
   \item \href{https://tools.ietf.org/html/rfc6219}{RFC6219}
   \item \href{https://tools.ietf.org/html/rfc6052}{RFC6052}
   \item \href{https://tools.ietf.org/html/rfc7598}{RFC7598}
-  \item
-    \href{http://openvswitch.org/}{Open vSwitch}
-  \item
-    \href{http://osrg.github.io/ryu/}{Ryu component-based software defined networking framework }
+  \item \href{http://www.netfilter.org}{The netfilter.org project}
   \end{itemize}
 \end{frame}
 
