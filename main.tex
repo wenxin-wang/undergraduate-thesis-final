@@ -13,6 +13,12 @@
 \author{王文鑫}
 \date{2016年6月8日}
 
+\AtBeginSection[]
+{
+\begin{frame}<beamer> 
+  \tableofcontents[currentsection]
+\end{frame}
+}
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
 
 \begin{document}
@@ -26,9 +32,20 @@
 \begin{frame}
   \frametitle{研究课题}
 
-  \begin{block}{IPv4}
-  在IPv4/IPv6过渡场景中，基于翻译等过渡技术，\\设计和实现灵活通用的流量调度机制，\\
-  使得ISP可以自由定制多出口情景下的调度策略
+  \vspace{-1em}
+  \begin{figure}
+    \includegraphics[width=0.9\textwidth]{figs/0-purpose.pdf}
+  \end{figure}
+  \vspace{-2em}
+
+  \begin{block}{主要工作内容}
+    \begin{itemize}
+    \item 在IPv4/IPv6过渡场景中，基于翻译等过渡技术，设计和实现灵活通用的流量调度机制
+    \item 使得ISP可以自由定制多出口情景下的调度策略
+      \begin{itemize}
+      \item 负载均衡、容错
+      \end{itemize}
+    \end{itemize}
   \end{block}
 \end{frame}
 
@@ -43,7 +60,7 @@
     \end{itemize}
   \end{block}
 
-  \begin{block}{IPv6：吸取了IPv4的经验和教训}
+  \begin{block}{IPv6}
     \begin{itemize}
     \item 地址数量巨大：$2^{128} \doteq 10^{38}$个地址
     \item 简化数据格式、配置和路由表，提高效率：
@@ -70,7 +87,7 @@
     \item 在很长的一段时间内，IPv4和IPv6网络共存
     \end{itemize}
   \end{block}
-  \begin{block}{过渡技术}
+  \begin{block}{引入过渡技术}
     \begin{itemize}
     \item 保证升级过程中对原始IPv4应用的支持
     \item 跨越不同IP协议访问网络资源
@@ -116,6 +133,7 @@
       \begin{figure}
         \includegraphics[width=\textwidth]{figs/17-encapsulation.pdf}
       \end{figure}
+      \vspace{-2em}
     \end{column}
   \end{columns}
   \vspace{1em}
@@ -130,9 +148,9 @@
     \end{column}
     \hfill
     \begin{column}{.49\textwidth}
-      \vspace{-2em}
+      \vspace{-3em}
       \begin{figure}
-        \includegraphics[width=0.8\textwidth]{figs/18-xlat.pdf}
+        \includegraphics[width=0.9\textwidth]{figs/18-xlat.pdf}
       \end{figure}
     \end{column}
   \end{columns}
@@ -142,8 +160,9 @@
   \frametitle{课题研究的过渡场景}
 
   \begin{figure}
-    \includegraphics[width=0.8\textwidth]{figs/1-464.pdf}
+    \includegraphics[width=\textwidth]{figs/1-464.pdf}
   \end{figure}
+  \vspace{-1.5em}
 
   \begin{block}{使用IPv6主干网承载IPv4端到端通信}
     \begin{itemize}
@@ -160,13 +179,13 @@
 
   \vspace{-1.5em}
   \begin{figure}
-    \includegraphics[width=0.9\textwidth]{figs/5-divi.pdf}\\
+    \includegraphics[width=0.93\textwidth]{figs/5-divi.pdf}\\
     \vspace{-3.5em}
-    \includegraphics[width=0.9\textwidth]{figs/7-nat64.pdf}\\
+    \includegraphics[width=0.93\textwidth]{figs/7-nat64.pdf}\\
     \vspace{-4em}
     \caption{\tiny DIVI无状态翻译和NAT64有状态翻译}
     \vspace{-2em}
-    \includegraphics[width=0.9\textwidth]{figs/8-ds-lite.pdf}
+    \includegraphics[width=0.93\textwidth]{figs/8-ds-lite.pdf}
     \vspace{-4em}
     \caption{\tiny DS-Lite封装}
   \end{figure}
@@ -319,7 +338,7 @@
 \begin{frame}
   \frametitle{用户网接入点结构设计}
   \begin{figure}
-    \includegraphics[width=\textwidth]{figs/10-user-access-point-b.pdf}
+    \includegraphics[width=\textwidth]{figs/10-user-access-point-c.pdf}
   \end{figure}
   \vspace{-1em}
 
@@ -422,6 +441,13 @@
 
 \begin{frame}
   \frametitle{二级处理模块间冲突解决}
+  \begin{figure}
+    \vspace{-4em}
+    \includegraphics[width=0.5\textwidth]{figs/19-netns.pdf}
+    \vspace{-2em}
+    \caption{命名空间隔离}
+  \end{figure}
+  \vspace{-1em}
 
   \begin{block}{无法避免的冲突}
     \begin{itemize}
