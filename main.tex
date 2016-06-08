@@ -15,9 +15,9 @@
 
 \AtBeginSection[]
 {
-\begin{frame}<beamer> 
-  \tableofcontents[currentsection]
-\end{frame}
+  \begin{frame}<beamer> 
+    \tableofcontents[currentsection]
+  \end{frame}
 }
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
 
@@ -49,129 +49,26 @@
   \end{block}
 \end{frame}
 
-\section{研究背景}
+\section{研究背景和研究思路}
 \subsection{IPv4/IPv6过渡}
 \begin{frame}
-  \frametitle{IPv4和IPv6}
-
-  \begin{block}{IPv4}
-    \begin{itemize}
-    \item 地址数量有限：$2^{32} \doteq 43$亿地址，已于2011年2月3日枯竭\footnotemark[1]
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{IPv6}
-    \begin{itemize}
-    \item 地址数量巨大：$2^{128} \doteq 10^{38}$个地址
-    \item 简化数据格式、配置和路由表，提高效率：
-      \begin{itemize}
-      \item IP包头：去除了校验码等信息，提高处理效率
-      \item 地址配置：利用设备标识自动配置全局可达地址，简化管理
-      \item 全局路由表：采用高度聚类的前缀分配原则，提高路由匹配效率
-      \end{itemize}
-    \item 原生的多播支持、端到端透明、强制IPSec支持……
-    \end{itemize}
-  \end{block}
-  \footnotetext[1]{https://www.nro.net/news/ipv4-free-pool-depleted}
-\end{frame}
-
-\begin{frame}
   \frametitle{过渡技术}
-
-  \begin{block}{IPv6不兼容IPv4}
-    \begin{itemize}
-    \item IPv4到IPv6的切换是一个渐进的过程
-      \begin{itemize}
-      \item IPv6诞生20周年：扩展迅速，全球覆盖率未过半\footnotemark[1]
-      \end{itemize}
-    \item 在很长的一段时间内，IPv4和IPv6网络共存
-    \end{itemize}
-  \end{block}
-  \begin{block}{引入过渡技术}
-    \begin{itemize}
-    \item 保证升级过程中对原始IPv4应用的支持
-    \item 跨越不同IP协议访问网络资源
-    \end{itemize}
-  \end{block}
-  \footnotetext[1]{https://www.google.com/intl/en/ipv6/statistics.html}
-\end{frame}
-
-\begin{frame}
-  \frametitle{双栈、封装和翻译}
-
   \vspace{-1em}
-  \begin{columns}[T] % align columns
-    \begin{column}{.4\textwidth}
-      \begin{block}{双栈}
-        \begin{itemize}
-        \item 不互通的两个协议栈
-        \item IPv4地址短缺
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \hfill
-    \begin{column}{.49\textwidth}
-      \vspace{-2em}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{figs/16-dual-stack.pdf}
-      \end{figure}
-      \vspace{-2em}
-    \end{column}
-  \end{columns}
-  \begin{columns}[T]
-    \begin{column}{.4\textwidth}
-      \begin{block}{封装}
-        \begin{itemize}
-        \item 一种IP协议数据包封装另一种
-        \item 协议不互通
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \hfill
-    \begin{column}{.49\textwidth}
-      \vspace{-2em}
-      \begin{figure}
-        \includegraphics[width=\textwidth]{figs/17-encapsulation.pdf}
-      \end{figure}
-      \vspace{-2em}
-    \end{column}
-  \end{columns}
-  \vspace{1em}
-  \begin{columns}[T]
-    \begin{column}{.4\textwidth}
-      \begin{block}{翻译}
-        \begin{itemize}
-        \item 对IP包头进行协议翻译
-        \item 协议间互通
-        \end{itemize}
-      \end{block}
-    \end{column}
-    \hfill
-    \begin{column}{.49\textwidth}
-      \vspace{-3em}
-      \begin{figure}
-        \includegraphics[width=0.9\textwidth]{figs/18-xlat.pdf}
-      \end{figure}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}
-  \frametitle{课题研究的过渡场景}
-
   \begin{figure}
     \includegraphics[width=\textwidth]{figs/1-464.pdf}
   \end{figure}
-  \vspace{-1.5em}
+  \vspace{-2em}
 
-  \begin{block}{使用IPv6主干网承载IPv4端到端通信}
+  \begin{block}{从IPv4到IPv6}
     \begin{itemize}
-    \item 用户端和资源端均存在大量不支持IPv6协议的应用
-    \item ISP的IPv6网络越来越成熟
-    \item 翻译技术：DIVI、NAT64
-    \item 封装技术：DS-Lite
+    \item IPv4地址池已于2011年2月3日枯竭\footnotemark[1]
+    \item IPv4到IPv6的切换是一个渐进的过程
+    \item 保证升级过程中对原始IPv4应用的支持，促进IPv6网络的扩展
+    \item 课题研究的过渡场景：使用IPv6主干网承载IPv4端到端通信
     \end{itemize}
   \end{block}
+
+  \footnotetext[1]{https://www.nro.net/news/ipv4-free-pool-depleted}
 \end{frame}
 
 \begin{frame}
@@ -212,13 +109,26 @@
   \end{block}
 \end{frame}
 
-\subsection{课题工作内容}
 \begin{frame}
-  \frametitle{工作内容}
+  \begin{figure}
+    \vspace{-1em}
+    \includegraphics[width=0.8\textwidth]{figs/20-ipv4-multi-egress.pdf}
+    \vspace{-2em}
+    \caption{\tiny 传统IPv4网络中的流量调度}
+    \vspace{-1em}
+    \includegraphics[width=\textwidth]{figs/9-multi-egress.pdf}
+    \vspace{-2em}
+    \caption{\tiny 过渡场景下的流量调度}
+  \end{figure}
+\end{frame}
 
-  \begin{block}{工作}
+\subsection{总体思路}
+\begin{frame}
+  \frametitle{总体思路}
+
+  \begin{block}{方案}
     \begin{itemize}
-    \item 调度机制设计和实现
+    \item 在用户接入口处设计和实现调度机制
       \begin{itemize}
       \item 灵活：基于五元组
       \item 通用：与具体过渡技术解耦
@@ -227,63 +137,30 @@
     \item 测试和验证
     \end{itemize}
   \end{block}
-
-  \begin{block}{意义}
-    \begin{itemize}
-    \item 使得过渡场景下的流量调度应用设计和开发成为可能
-    \item ISP通过制定调度策略，优化用户体验和管理成本
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 \section{设计和实现}
 \subsection{总体结构}
 \begin{frame}
   \frametitle{总体结构}
+  \vspace{-1em}
 
   \begin{figure}
     \includegraphics[width=\textwidth]{figs/9-multi-egress.pdf}
   \end{figure}
   \vspace{-1em}
 
-  \begin{block}{设计的核心：用户接入口}
+  \begin{block}{设计思路}
     \begin{itemize}
-    \item 上游出口分配给各一级处理模块
-    \item 用户网接入点设置各个二级处理模块
-    \item 接入点按照五元组等信息分发流量到二级处理模块
-    \item 二级处理模块交给各自的一级处理模块
+    \item 用户接入口负责分发流量到二级处理模块，从而对应一级模块进入不同上游接入
+    \item 正确：各模块共存时能够正常工作
+    \item 高效：用户流量在千兆或者万兆级别，间接代价被流量放大
+    \item 通用：与具体过渡技术解耦，不依赖内部实现
     \end{itemize}
   \end{block}
 \end{frame}
 
-\subsection{设计}
-\begin{frame}
-  \frametitle{设计原则}
-
-  \begin{block}{正确性}
-    \begin{itemize}
-    \item 二级处理模块和调度机制的共存
-    \item 用户IPv6接入与调度机制的IPv6接入共存
-    \item 规则设计完备且尽量小巧
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{高效性}
-    \begin{itemize}
-    \item 用户流量在千兆或者万兆级别，间接代价被流量放大
-    \item 牺牲代码和配置的可读性，换取性能
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{通用性}
-    \begin{itemize}
-    \item 不涉及任何二级处理模块的内部功能
-    \item 对二级处理模块实现方式没有任何假设
-    \item 不同二级处理模块平级对待
-    \end{itemize}
-  \end{block}
-\end{frame}
-
+\subsection{各模块设计}
 \begin{frame}
   \frametitle{用户网接入点结构设计}
   \begin{figure}
@@ -319,18 +196,12 @@
     \begin{itemize}
     \item 根据五元组信息，判断数据包发往某个二级处理模块
     \item 通过标记数据包实现（见后）
-      \begin{itemize}
-      \item 识别二级处理模块退回的数据包
-      \end{itemize}
     \end{itemize}
   \end{block}
 
   \begin{block}{分发模块}
     \begin{itemize}
     \item 根据决策，将数据包发往不同的二级处理模块
-      \begin{itemize}
-      \item 如果调度策略和传统路由类似，可以和判断模块合并（见后） 
-      \end{itemize}
     \end{itemize}
   \end{block}
 \end{frame}
@@ -351,65 +222,24 @@
 
   \begin{block}{IPv6主干网接入网口}
     \begin{itemize}
-    \item 设备接口有限，所有二级模块共享一个主干网接入网口
+    \item 所有二级模块共享一个主干网接入网口
     \end{itemize}
   \end{block}
 \end{frame}
 
-\subsection{实现}
-\begin{frame}
-  \frametitle{背景技术}
-  \begin{block}{Linux}
-    \begin{itemize}
-    \item 路由、防火墙、编程接口
-    \item DIVI、NAT64、DS-Lite均有Linux实现
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{NetFilter和IPTables}
-    \begin{itemize}
-    \item NetFilter：数据包在Linux网络协议栈的标准处理流程
-    \item IPTabels：对NetFilter功能的划分和封装，支持网络虚拟化
-      \begin{itemize}
-      \item 匹配规则：五元组，处理规则：MARK、CONNMARK（路由标记）
-      \end{itemize}
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{IPRoute}
-    \begin{itemize}
-    \item 一个默认路由表，和多个用户创建的路由表
-    \item 按路由标记的路由表查找规则
-    \item 表内是传统的路由表项（目的地址前缀匹配）
-    \end{itemize}
-  \end{block}
-\end{frame}
-
+\subsection{各模块实现}
 \begin{frame}
   \frametitle{用户网接入系统实现}
   \vspace{-1em}
   \begin{figure}
-    \includegraphics[width=\textwidth]{figs/10-user-access-point-b.pdf}
+    \includegraphics[width=0.7\textwidth]{figs/10-user-access-point-b.pdf}
+  \end{figure}
+  \vspace{-3em}
+  \begin{figure}
+    \includegraphics[width=\textwidth]{figs/11-netfilter.pdf}
   \end{figure}
   \vspace{-2em}
 
-  \begin{block}{判断模块}
-    \begin{itemize}
-    \item 一组IPTables规则和可能的IPRoute路由规则
-    \item IPTables规则：非传统路由的五元组匹配
-    \item 路由规则：传统路由的调度规则，提升性能
-    \end{itemize}
-  \end{block}
-
-  \begin{block}{分发模块}
-    \begin{itemize}
-    \item 按路由标记进行流量分发
-    \item 使用各二级模块提供的数据传入接口
-      \begin{itemize}
-      \item IPTables处理规则，隧道端点
-      \end{itemize}
-    \end{itemize}
-  \end{block}
 \end{frame}
 
 \begin{frame}
@@ -424,30 +254,11 @@
     \begin{itemize}
     \item 提供服从调度需求的数据接口
       \begin{itemize}
-      \item 扩展DIVI二级处理器
-      \item 添加NAT64无状态二级处理器
+      \item 扩展DIVI二级处理器：从Netfilter实现迁移至IPTables
+      \item 添加NAT64无状态二级处理器：IPTables
       \end{itemize}
-    \item 上游回复处理
     \end{itemize}
   \end{block}
-
-  \begin{block}{用户IPv4/IPv6接入网口}
-    \begin{itemize}
-    \item 使用开源软件配置
-    \item 选择某个二级模块为IPv4 DNS提供向上级DNS服务的连接
-    \end{itemize}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-  \frametitle{二级处理模块间冲突解决}
-  \begin{figure}
-    \vspace{-4em}
-    \includegraphics[width=0.5\textwidth]{figs/19-netns.pdf}
-    \vspace{-2em}
-    \caption{命名空间隔离}
-  \end{figure}
-  \vspace{-1em}
 
   \begin{block}{无法避免的冲突}
     \begin{itemize}
@@ -473,9 +284,9 @@
       一级处理器 & 上游IPv4地址（段）\\
       \hline
       IVI核心翻译器 & 58.200.129.128/27\\
-      NAT64一级翻译器 & 198.18.202.1\\
       DS-Lite AFTR1 & 198.18.200.1\\
       DS-Lite AFTR2 & 198.18.201.1\\
+      NAT64一级翻译器 & 198.18.202.1\\
     \end{tabular}
   \end{table}
 \end{frame}
@@ -508,29 +319,22 @@
   \vspace{-1em}
 
   \begin{figure}
-    \includegraphics[width=0.7\textwidth]{figs/c2-s1-ping.jpeg}\\
-    \includegraphics[width=0.7\textwidth]{figs/c2-s1-pdump.jpeg}
+    \includegraphics[width=0.7\textwidth]{figs/c2-s4-ping.jpeg}\\
+    \includegraphics[width=0.7\textwidth]{figs/c2-s4-pdump.jpeg}
     \caption{\tiny 基于目的地址的调度}
   \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{实验平台}
-
-  \begin{center}
-    \includegraphics[width=\textwidth]{figs/test-env.jpeg}
-  \end{center}
 \end{frame}
 
 \section{总结}
 \begin{frame}
   \frametitle{总结和计划}
 
-  \begin{block}{总结}
+  \begin{block}{主要贡献}
     \begin{itemize}
     \item 设计调度机制，使得过渡场景下的流量调度成为可能
       \begin{itemize}
       \item 与具体过渡技术解耦的（通用），基于五元组（灵活）
+      \item ISP通过制定调度策略，优化用户体验，降低管理成本
       \end{itemize}
     \item 扩展过渡技术，符合多出口场景的需求
     \end{itemize}

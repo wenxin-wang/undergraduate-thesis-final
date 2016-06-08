@@ -1,0 +1,10 @@
+#!/bin/sh
+iptables -t mangle -A PREROUTING -i eth2 -s 10.129.128.8 -j MARK --set-mark 1
+iptables -t mangle -A PREROUTING -i eth2 -s 10.129.128.9 -j MARK --set-mark 2
+
+iptables -A FORWARD -m mark --mark 1 -j IVI
+
+ip route flush table 2
+ip rule add fwmark 2 lookup 2
+ip route add default via 192.0.0.1 table 2
+ip route add 10.129.128.0/17 dev eth2 table 2
